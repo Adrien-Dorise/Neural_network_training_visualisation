@@ -80,7 +80,6 @@ int initANN(struct ANN * nn, int iInputSize, int iOutputSize, int iHiddenLayerNu
 				yPos = HEIGHTBLANK*(neur) + OFFSET;
 				if(lay == 0) //Case of input -> first layer
 				{
-					
 					initNeuron(&(nn->neurons[lay][neur]),iInputSize,iSigmaType[lay],xPos,yPos);	
 				}
 				else //Hidden layers
@@ -132,9 +131,9 @@ int displayANN(struct ANN nn, SDL_Renderer** renderer,SDL_Texture** texture, flo
 	int colorTarget[3] = {0,0,0};
 	int colorArrowGreen[3] = {0,255,0};
 	int colorArrowRed[3] = {255,0,0};
-	int xNeurIn[nn.iInputSize],yNeurIn[nn.iInputSize];
+	int xNeurIn[INPUTSIZE],yNeurIn[INPUTSIZE];
 	int xNeur,yNeur,xLine1,yLine1,xLine2,yLine2,xText,yText;
-	char value[50];
+	char value[50] = { 0 };
 	int iWeigthOffset = 8;
 	
 	
@@ -168,10 +167,13 @@ int displayANN(struct ANN nn, SDL_Renderer** renderer,SDL_Texture** texture, flo
 		addTxt(renderer,texture , value, xText,yText, FONTSIZE, color);
 		
 		gcvt(fTarget[neur], 6, value); //PRINT TARGET
-		addTxt(renderer,texture , strcat(value," = target"), xText, yText + 25, FONTSIZE, colorTarget);	
+		strcat(value, " = target");
+		addTxt(renderer,texture , value, xText, yText + 25, FONTSIZE, colorTarget);	
 	}
-	gcvt(fCost, 6, value); //PRINT COST
-	addTxt(renderer,texture , strcat(value," = COST"), nn.neurons[nn.iLayerNumber-1][0].xPos, nn.neurons[nn.iLayerNumber-1][0].yPos - NEURONRADIUS*2, FONTSIZE, colorTarget);
+	
+	gcvt((double)fCost, 6, value); //PRINT COST	
+	strcat(value, " = COST");
+	addTxt(renderer,texture , value, nn.neurons[nn.iLayerNumber-1][0].xPos, nn.neurons[nn.iLayerNumber-1][0].yPos - NEURONRADIUS*2, FONTSIZE, colorTarget);
 	
 	
 
@@ -225,16 +227,16 @@ int displayANN(struct ANN nn, SDL_Renderer** renderer,SDL_Texture** texture, flo
 }
 
 
-int displayBackpropagation(struct ANN nn, SDL_Renderer** renderer,SDL_Texture** texture, float fInput[], float fTarget[], float fCost, float fLastCost,int iteration)
+int displayBackpropagation(struct ANN nn, SDL_Renderer** renderer,SDL_Texture** texture, float fInput[], float fTarget[], float fCost, float fLastCost,int iCurrentIteration, int iTotIterations)
 {	
 	//CLIQUE Q TO QUIT BAKCPROPAGATION DISPLAY; SPACE TO MOVE
 	SDL_Event events;
 	int lay, neur, weig;
 	int error = 0, blend=100;
-	int xNeurIn[nn.iInputSize],yNeurIn[nn.iInputSize];
+	int xNeurIn[INPUTSIZE],yNeurIn[INPUTSIZE];
 	int xNeur,yNeur,xLine1,yLine1,xLine2,yLine2,xText,yText;
 	int *color,colorBlack[3] = {0,0,0},colorGreen[3] = {0,255,0},colorRed[3] = {255,0,0};
-	char value[50];
+	char value[50],txt[100];
 	int iWeigthOffset = 8;
 
 
@@ -244,7 +246,8 @@ int displayBackpropagation(struct ANN nn, SDL_Renderer** renderer,SDL_Texture** 
 	displayANN(nn,renderer,texture,fInput,fTarget,fCost);
 
 	gcvt(fLastCost, 6, value); //PRINT LASTCOST
-	addTxt(renderer,texture , strcat(value," = LAST COST"), nn.neurons[nn.iLayerNumber-1][0].xPos, nn.neurons[nn.iLayerNumber-1][0].yPos - NEURONRADIUS*2 - FONTSIZE, FONTSIZE, colorBlack);
+	strcat(value, " = LAST COST");
+	addTxt(renderer,texture , value, nn.neurons[nn.iLayerNumber-1][0].xPos, nn.neurons[nn.iLayerNumber-1][0].yPos - NEURONRADIUS*2 - FONTSIZE, FONTSIZE, colorBlack);
 	if(fCost > fLastCost)
 	{color = colorGreen; addArrowUpR(renderer,nn.neurons[nn.iLayerNumber-1][0].xPos - FONTSIZE*2, nn.neurons[nn.iLayerNumber-1][0].yPos - NEURONRADIUS*2,FONTSIZE,color);}
 	else if(fCost == fLastCost)
@@ -273,10 +276,13 @@ int displayBackpropagation(struct ANN nn, SDL_Renderer** renderer,SDL_Texture** 
 				
 				
 				
-				sprintf(value, "%i", iteration);//print last weights
+				sprintf(value, "%i", iCurrentIteration);//print last weights
 				addTxt(renderer,texture , "Backpropagation in progress: Press a key to continue, Q to skip this iteration, ESC to quit", 10,10, FONTSIZE*1.5, colorBlack);
 				addTxt(renderer,texture , "Old weights displayed below new weights", 10,10+FONTSIZE*1.5, FONTSIZE*1.5, colorBlack);
-				addTxt(renderer,texture , strcat(value," iterations"), 10,10+FONTSIZE*3, FONTSIZE*1.5, colorBlack);
+				
+				sprintf(txt,"iterations: %s / %i", value, iTotIterations);
+				
+				addTxt(renderer, texture, txt, 10,10+FONTSIZE*3, FONTSIZE*1.5, colorBlack);
 				
 				
 				
@@ -600,26 +606,6 @@ void TESTANN (struct ANN nn)
 	printf("\nTEST ANN END\n");
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

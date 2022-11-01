@@ -1,10 +1,17 @@
 #ifndef INTERFACE_H
 #define INTERFACE_H
 
+#ifdef _MSC_VER
+#define _CRT_SECURE_NO_WARNINGS
+#endif
+
+
 #include <stdio.h>
 #include <stdlib.h>
-#include <SDL2/SDL.h> //sudo apt install libsdl2-2.0-0 libsdl2-gfx-1.0-0 libsdl2-image-2.0-0 libsdl2-mixer-2.0-0 libsdl2-net-2.0-0 libsdl2-ttf-2.0-0
-#include <SDL2/SDL_ttf.h>  // sudo apt-get install libsdl2-ttf-dev
+//#include <SDL2/SDL.h> // For LINUX: sudo apt install libsdl2-2.0-0 libsdl2-gfx-1.0-0 libsdl2-image-2.0-0 libsdl2-mixer-2.0-0 libsdl2-net-2.0-0 libsdl2-ttf-2.0-0
+#include <SDL.h> // For WINDOWS: https://www.matsson.com/prog/sdl2-mingw-w64-tutorial.php
+//#include <SDL2/SDL_ttf.h>  //FOR LINUX:  sudo apt-get install libsdl2-ttf-dev
+#include <SDL_ttf.h>  // FOR WINDOWS: https://github.com/libsdl-org/SDL_ttf/releases
 //#include <SDL/SDL_gfx.h> // sudo apt-get install libsdl-gfx1.2-5
 #include <math.h>
 
@@ -13,10 +20,11 @@
 #define CALCULATION 0 //0 for CPU; 1 for GPU
 #define COLORBITS 32
 #define FONT 12
-#define WINDOWHEIGHT 2000
-#define WINDOWWIDTH 2600
-#define LINETHICKNESS 7
+#define WINDOWHEIGHT 1000
+#define WINDOWWIDTH 1800
+#define LINETHICKNESS 5
 #define CIRCLESTEP 0.1
+#define MAXSTRING 400
 
 
 int initWindow(SDL_Window** window, SDL_Renderer** renderer, int iHeight, int iWidth);

@@ -232,12 +232,11 @@ int addTxt(SDL_Renderer** renderer,SDL_Texture** text, char txt[], int xPos, int
 	SDL_Color sdlColor = {color[0], color[1], color[2], 255};
 
 	font = TTF_OpenFont("rsrc/arial.ttf", fontSize);
-
 	textTemp = TTF_RenderText_Blended(font, txt, sdlColor);	        	
 	if (text == NULL){SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "[DEBUG] > %s", TTF_GetError());}
 
 
-	*text = SDL_CreateTextureFromSurface(*renderer, textTemp);
+ 	*text = SDL_CreateTextureFromSurface(*renderer, textTemp);
 	SDL_QueryTexture(*text, NULL, NULL, &position.w, &position.h);
 	position.x = xPos;
 	position.y = yPos;

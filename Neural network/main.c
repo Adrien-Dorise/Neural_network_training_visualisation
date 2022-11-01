@@ -3,16 +3,16 @@
 #include "interface.h"
 
 
-#define INPUTSIZE 2
+
 #define OUTPUTSIZE 2
 #define LAYERNUMBER 4
 #define LAYER1 3
 #define LAYER2 3
 #define LAYER3 3
 #define LAYER4 3 
-#define ITERATIONS 20000	
+#define ITERATIONS 1000	
 #define GRADIENTSIGMA 0.005
-#define SKIPITER 250
+#define SKIPITER 10
 
 int main()
 {
@@ -25,7 +25,7 @@ int main()
 
 	int iNeuronRepartition[LAYERNUMBER] = {LAYER1,LAYER2,LAYER3,LAYER4};
 	int iSigmaTypePerLayer[LAYERNUMBER+1] = {2,2,2,2,2};
-	float fInput[INPUTSIZE] = {0.01,0.05};
+	float fInput[INPUTSIZE] = {0.01,5.00};
 	float fTarget[OUTPUTSIZE] = {0.1,0.5};
 	float fPredict[OUTPUTSIZE] = {0};
 	int count = 0;
@@ -51,7 +51,8 @@ int main()
 	nn.neurons[2][1].fWeights[1] = 0;
 	nn.neurons[3][1].fWeights[1] = 0;
 	*/
-	TESTANN(nn);
+	
+	//TESTANN(nn);
 	
 	
 
@@ -63,9 +64,9 @@ int main()
 		//for (i=0;i<OUTPUTSIZE;i++){printf("RESULTS NEURON %i: %f\n",i,fPredict[i]);}
 		
 		fCost[iteration] = costFunction(OUTPUTSIZE, fTarget, fPredict);
-		printf("\nCOST%i IS %f\n",i,fCost[iteration]);
+		//printf("\nCOST %i IS %f\n",i,fCost[iteration]);
 		
-		TESTANN(nn);
+		//TESTANN(nn);
 		/*displayANN(nn,&renderer,&text,fInput,fTarget,fCost[iteration]);
 		pause();
 		*/
@@ -75,7 +76,7 @@ int main()
 				{fLastCost = 0;}
 			else
 				{fLastCost = fCost[iteration-SKIPITER];}
-			error = displayBackpropagation(nn,&renderer,&text,fInput,fTarget,fCost[iteration],fLastCost,iteration);
+			error = displayBackpropagation(nn,&renderer,&text,fInput,fTarget,fCost[iteration],fLastCost,iteration,ITERATIONS);
 			if(error != 0)
 			{printf("ERROR %i",error);break;}
 			count++;
@@ -92,21 +93,17 @@ int main()
 	
 	
 	
-	for(i=0;i<ITERATIONS;i++)
-	{printf("\nCOST%i IS %f\n",i,fCost[i]);}
+	/*for (i = 0; i<ITERATIONS; i++)
+	{printf("\nCOST %i IS %f\n",i,fCost[i]);}*/
 	
 	
-	TESTANN(nn);
-	
-	
-	
-
-
+	//TESTANN(nn);
+	/*
 	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 	SDL_RenderClear(renderer);
 	displayANN(nn,&renderer,&text,fInput,fTarget,fCost[0]);
 	pause();
-	
+	*/
 
 	SDL_DestroyTexture(text);
 	closeWindow(&window,&renderer);
